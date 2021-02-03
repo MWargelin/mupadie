@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Bootstrap required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  
+  <title>Repeated pattern discovery</title>
+</head>
+<body>
+  <div class="container">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="m-3">
+          {% for category, message in messages %}
+            <div class="alert alert-{{category}}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="m-3">
+      <form action="/upload" method="POST" enctype="multipart/form-data" class="row g-2">
+        <label for="formFile" class="form-label">Upload MIDI files. Only MIDI files and files that are max. 1 MB are allowed!</label>
+        <div class="input-group">
+          <input type="file" class="form-control" name="file" id="inputGroupFile" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+          <input class="btn btn-outline-primary" type="submit" id="inputGroupFileSubmitButton"></input>
+        </div>
+      </form>
+    </div>
+    
+  </div>
+
+  <hr>
+  
+  {% block body %}{% endblock %}
+
+  <!-- Bootstrap requirement -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -60,16 +60,21 @@ def upload_file():
 	return redirect(url_for('analyse_file', filename=filename))
 
 
-@app.route('/analyse/<path:filename>')
+@app.route('/analyse/<path:filename>', methods=['GET', 'POST'])
 def analyse_file(filename):
 	midi_filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-	point_set = read_midi.to_point_set(midi_filepath)
-	# plot_img_path = read_midi.create_plot(point_set)
+	tracks = read_midi.tracks_enumerate(midi_filepath)
+
+	if request.method == 'POST':
+		chosen_tracks = [int(value) for value, _ in request.form.items()]
+		point_set = read_midi.to_point_set(midi_filepath, chosen_tracks)
+	else:
+		point_set = None
+
 	return render_template('analyse.html', 
 						   filename=filename,
-						   point_set=point_set,
-						   # plot_img_path=plot_img_path
-						  )
+						   tracks=tracks,
+						   point_set=point_set)
 
 
 if __name__ == '__main__':

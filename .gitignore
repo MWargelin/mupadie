@@ -2,3 +2,4 @@ env/
 ideoita.md
 midi_files/
 *__pycache__/
+.vscode/

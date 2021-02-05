@@ -3,12 +3,25 @@
 {% block body %}
 <div class="container">
 
-  <!-- Point set visualisation -->
-  <div class="p-3">
-    <h2>Point set for {{filename}}</h2>
-    <!-- Create a div where the point set will be visualised -->
-    <div id="point_set_vis" style="overflow:scroll;"></div>
-  </div>
+  {% if point_set %}
+    <!-- Point set visualisation -->
+    <div class="p-3">
+        <h2>Point set for {{filename}}</h2>
+        <!-- Create a div where the point set will be visualised -->
+        <div id="point_set_vis" style="overflow:scroll;"></div>
+    </div>
+
+    <!-- Import D3 -->
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+    <!-- Pass point_set to the JS script -->
+    <script>
+      var point_set = {{ point_set|tojson }}
+    </script>
+
+    <!-- JS script to visualise the point set -->
+    <script type="text/javascript" src={{ url_for('static', filename='visualise_point_set.js') }}></script>
+  {% endif %}
 
   <!-- Settings and parameters-->
   <div class="p-3 m-3 bg-dark text-white rounded">
@@ -24,17 +37,6 @@
       <input class="btn btn-outline-light mt-2" type="submit" id="trackSubmit"></input>
     </form>
   </div>
-
-  <!-- Import D3 -->
-  <script src="https://d3js.org/d3.v6.min.js"></script>
-
-  <!-- Pass point_set to the JS script -->
-  <script>
-    var point_set = {{ point_set|tojson }}
-  </script>
-
-  <!-- JS script to visualise the point set -->
-  <script type="text/javascript" src={{ url_for('static', filename='visualise_point_set.js') }}></script>
 
 </div>
 {% endblock %}

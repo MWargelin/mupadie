@@ -3,7 +3,7 @@ var data = point_set
 
 // set the dimensions and margins of the graph
 const last_onset = data[data.length - 1][0]
-var margin = {top: 10, right: 30, bottom: 30, left: 60},
+var margin = {top: 10, right: 30, bottom: 50, left: 60},
     width = last_onset * 100 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
@@ -31,6 +31,21 @@ var y = d3.scaleLinear()
     .range([ height, 0]);
 svg.append("g")
     .call(d3.axisLeft(y));
+
+// Add X axis label
+svg.append("text")
+    .attr("text-anchor", "start")
+    .attr("x", 20)
+    .attr("y", height + margin.top + 20)
+    .text("Note onset (s)");
+
+// Add Y axis label
+svg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("transform", "rotate(-90)")
+    .attr("y", -margin.left + 20)
+    .attr("x", -height / 2)
+    .text("MIDI pitch number")
 
 // Add dots
 svg.append("g")

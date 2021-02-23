@@ -2,7 +2,7 @@ import mido
 
 
 def to_point_set(path, chosen_tracks):
-	point_set = list()
+	point_set = set()
 	mid = mido.MidiFile(path)
 
 	mid.tracks = [track for i, track in enumerate(mid.tracks) if i in chosen_tracks]
@@ -12,9 +12,9 @@ def to_point_set(path, chosen_tracks):
 	for msg in mid:
 		note_onset += msg.time
 		if msg.type == 'note_on' and msg.velocity != 0:
-			point_set.append((note_onset, msg.note))
+			point_set.add((note_onset, msg.note))
 
-	return point_set
+	return sorted(point_set)
 
 
 def tracks_enumerate(path):

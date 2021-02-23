@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 
 from read_midi import read_midi
+from algorithms import siatec
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'midi_files'
@@ -68,6 +69,8 @@ def analyse_file(filename):
 	if request.method == 'POST':
 		chosen_tracks = [int(value) for value, _ in request.form.items()]
 		point_set = read_midi.to_point_set(midi_filepath, chosen_tracks)
+		patterns = siatec.compute(point_set, 2)
+		point_set = {'point_set': point_set, 'patterns': patterns}
 	else:
 		point_set = None
 

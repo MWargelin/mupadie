@@ -4,11 +4,19 @@
 <div class="container">
 
   {% if point_set %}
-    <!-- Point set visualisation -->
-    <div class="p-3">
-        <h2>Point set for {{filename}}</h2>
-        <!-- Create a div where the point set will be visualised -->
-        <div id="point_set_vis" style="overflow:scroll;"></div>
+    <div style="display:flex;">
+      <!-- This div will contain representations of found patterns -->
+      <div>
+        <div id="patterns_div" style="max-height: 600px; width:min-content; overflow:scroll;"></div>
+      </div>
+      <div>
+        <!-- Point set visualisation -->
+        <div id="point_set_div">
+
+            <!-- Create a div where the point set will be visualised -->
+            <div id="point_set_vis" style="overflow:scroll;"></div>
+        </div>
+      </div>
     </div>
 
     <!-- Import D3 -->

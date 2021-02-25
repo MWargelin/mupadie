@@ -124,7 +124,7 @@ d3.selectAll(".pattern-checkbox")
 const last_onset = data.point_set[data.point_set.length - 1][0]
 const max_midi_pitch = 127
 var margin = {top: 10, right: 30, bottom: 50, left: 70},
-    width = last_onset * 100 - margin.left - margin.right,
+    width = Math.round(last_onset / 7500000),
     height = 600 - margin.top - margin.bottom
 
 // append the svg object to the page
@@ -149,7 +149,7 @@ svg.append("text")
     .attr("text-anchor", "start")
     .attr("x", 20)
     .attr("y", height + margin.top + 25)
-    .text("Note onset (s)")
+    .text("Note onset")
 
 // Add Y axis
 var y = d3.scaleLinear()

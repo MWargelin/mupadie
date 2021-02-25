@@ -12,6 +12,17 @@ data.patterns.forEach(pattern => {
     pattern.color = random_color()
 })
 
+data.patterns.forEach(pattern => {
+    normalised = JSON.parse(JSON.stringify(pattern.instances[0]))
+    const first_x = normalised[0][0];
+    const first_y = normalised[0][1];
+    normalised.forEach(point => {
+        point[0] -= first_x
+        point[1] -= first_y
+    })
+    pattern.normalised = normalised
+})
+
 // // Pattern selector
 // Create small svg tags for patterns
 var pattern_width = 155
@@ -54,11 +65,14 @@ pattern_divs
     .text(function (d) { return "Visualise " + d.name})
 
 // Map extents of patterns for scaling patterns individually
-patterns = data.patterns.map(pattern => pattern.instances[0])
 pattern_xs = []
-patterns.forEach(pattern => pattern.forEach(point => pattern_xs.push(point[0])))
 pattern_ys = []
-patterns.forEach(pattern => pattern.forEach(point => pattern_ys.push(point[1])))
+data.patterns.forEach(pattern => {
+    pattern.normalised.forEach(point => {
+        pattern_xs.push(point[0])
+        pattern_ys.push(point[1])
+    })
+})
 xs_extent = d3.extent(pattern_xs)
 ys_extent = d3.extent(pattern_ys)
 
@@ -72,7 +86,7 @@ var patterns_y_scale = d3.scaleLinear()
 // Draw points for patterns
 pattern_groups
     .selectAll("circle")
-    .data(function(d) { return d.instances[0] })
+    .data(function(d) { return d.normalised })
     .enter()
     .append("circle")
         .attr("cx", function(d) { return patterns_x_scale(d[0]) })

@@ -99,35 +99,63 @@ pattern_groups
 
 // Functionality to toggle showing patterns in main visualisation
 function update_pattern_vis () {
-    d3.selectAll(".pattern-checkbox").each(function(d){
-        cb = d3.select(this)
+    cb = d3.select(this)
+    pattern_data = cb.datum()
 
-        if(cb.property("checked")){
-            group = svg.selectAll("." + d.name)
+    if (cb.property("checked")) {
+        pattern_group = svg
+            .append("g")
+                .attr("class", function(d) { return pattern_data.name })
+                .style("fill", function(d) { return pattern_data.color })
+                .style("stroke", function(d) { return pattern_data.color })
 
-            group.selectAll("circle")
+        pattern_instances = pattern_group
+            .selectAll(".pattern-instance")
+            .data(function(d) { return pattern_data.instances })
+            .enter()
+            .append("g")
+                .attr("name", function(d, i) { return "instance-" + (i + 1) })
+
+        pattern_instances
+            .selectAll("circle")
+            .data(function(d) { return d })
+            .enter()
+            .append("circle")
+                .attr("cx", function (d) { return x(d[0]) })
+                .attr("cy", function (d) { return y(d[1]) })
                 .transition()
                 .duration(300)
                 .attr("r", 5)
 
-            group.selectAll("path")
+        pattern_path_generator = d3.line()
+            .x(d => x(d[0]))
+            .y(d => y(d[1]))
+
+        pattern_instances
+            .append("path")
+                .attr("d", function(d) { return pattern_path_generator(d) })
+                .attr("stroke-width", 0)
+                .attr("fill", "none")
                 .transition()
                 .duration(300)
                 .attr("stroke-width", 4)
-        } else {
-            group = svg.selectAll("." + d.name)
+    } else {
+        pattern_group = svg.selectAll("." + pattern_data.name)
 
-            group.selectAll("circle")
-                .transition()
-                .duration(300)
-                .attr("r", 0)
+        pattern_group.selectAll("circle")
+            .transition()
+            .duration(300)
+            .attr("r", 0)
 
-            group.selectAll("path")
-                .transition()
-                .duration(300)
-                .attr("stroke-width", 0)
-        }
-    })
+        pattern_group.selectAll("path")
+            .transition()
+            .duration(300)
+            .attr("stroke-width", 0)
+
+        pattern_group
+            .transition()
+            .duration(300).remove()
+    }
 }
 
 d3.selectAll(".pattern-checkbox")
@@ -193,38 +221,3 @@ svg.append("g")
         .transition()
         .duration(1000)
         .attr("r", 3)
-
-// Add patterns to main visualisation (invisible for now)
-main_vis_pattern_groups = svg
-    .selectAll("pattern")
-    .data(data.patterns)
-    .enter()
-    .append("g")
-        .attr("class", function(d) { return d.name })
-        .style("fill", function(d) { return d.color })
-        .style("stroke", function(d) { return d.color })
-
-main_vis_pattern_instances_groups = main_vis_pattern_groups
-    .selectAll("g")
-    .data(function(d) { return d.instances })
-    .enter()
-    .append("g")
-    .attr("name", function(d, i) { return "instance_" + (i + 1) })
-
-main_vis_pattern_instances_groups
-    .selectAll("circle")
-    .data(function(d) { return d })
-    .enter()
-    .append("circle")
-        .attr("cx", function (d) { return x(d[0]) })
-        .attr("cy", function (d) { return y(d[1]) })
-
-pattern_path_generator = d3.line()
-    .x(d => x(d[0]))
-    .y(d => y(d[1]))
-
-main_vis_pattern_instances_groups
-    .append("path")
-    .attr("d", function(d) { return pattern_path_generator(d) })
-    .attr("stroke-width", 0)
-    .attr("fill", "none")

@@ -44,6 +44,9 @@ def _get_instances(pattern, translation_vectors):
 
 
 def _format_for_visualisation(translation_vectors):
+    translation_vectors = sorted(translation_vectors,
+                                 key=lambda pattern: len(pattern['pattern']),
+                                 reverse=True)
     patterns = []
     for i, pattern in enumerate(translation_vectors):
         patterns.append(

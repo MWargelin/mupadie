@@ -53,9 +53,9 @@ def test_get_instances():
 def test_compute(unsorted_point_set):
     result = siatec.compute(unsorted_point_set, min_pattern_length=2)
     assert result == [
-        {'name': 'Pattern_1', 'instances': [[(2,1), (2,2)], [(2,2), (2,3)]]},
-        {'name': 'Pattern_2', 'instances': [[(1,1), (2,1)], [(1,3), (2,3)], [(2,2), (3,2)]]},
+        {'name': 'Pattern_1', 'instances': [[(1,1), (1,3), (2,2)], [(2,1), (2,3), (3,2)]]},
+        {'name': 'Pattern_2', 'instances': [[(2,1), (2,2)], [(2,2), (2,3)]]},
         {'name': 'Pattern_3', 'instances': [[(1,1), (2,1)], [(1,3), (2,3)], [(2,2), (3,2)]]},
-        {'name': 'Pattern_4', 'instances': [[(1,1), (1,3), (2,2)], [(2,1), (2,3), (3,2)]]},
-        {'name': 'Pattern_5', 'instances': [[(1,1), (2,1)], [(1,3), (2,3)], [(2,2), (3,2)]]},
+        {'name': 'Pattern_4', 'instances': [[(1,1), (2,1)], [(1,3), (2,3)], [(2,2), (3,2)]]},
+        {'name': 'Pattern_5', 'instances': [[(1,1), (2,1)], [(1,3), (2,3)], [(2,2), (3,2)]]}
     ]

@@ -95,7 +95,6 @@ pattern_groups
         .transition()
         .duration(1000)
         .attr("r", 4)
-        .delay(function(d, i) { return i * 100 })
 
 // Functionality to toggle showing patterns in main visualisation
 function update_pattern_vis () {

@@ -9,10 +9,6 @@ function random_color() {
 }
 
 data.patterns.forEach(pattern => {
-    pattern.color = random_color()
-})
-
-data.patterns.forEach(pattern => {
     normalised = JSON.parse(JSON.stringify(pattern.instances[0]))
     const first_x = normalised[0][0];
     const first_y = normalised[0][1];
@@ -111,11 +107,13 @@ function update_pattern_vis () {
     pattern_data = cb.datum()
 
     if (cb.property("checked")) {
+        color = random_color()
+
         pattern_group = svg
             .append("g")
                 .attr("class", function(d) { return pattern_data.name })
-                .style("fill", function(d) { return pattern_data.color })
-                .style("stroke", function(d) { return pattern_data.color })
+                .style("fill", function(d) { return color })
+                .style("stroke", function(d) { return color })
 
         pattern_instances = pattern_group
             .selectAll(".pattern-instance")

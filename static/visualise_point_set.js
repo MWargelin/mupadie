@@ -8,6 +8,8 @@ function random_color() {
     return "rgb("+color1+", "+color2+", "+color3+")"
 }
 
+pattern_xs = []
+pattern_ys = []
 data.patterns.forEach(pattern => {
     normalised = JSON.parse(JSON.stringify(pattern.instances[0]))
     const first_x = normalised[0][0];
@@ -15,6 +17,8 @@ data.patterns.forEach(pattern => {
     normalised.forEach(point => {
         point[0] -= first_x
         point[1] -= first_y
+        pattern_xs.push(point[0])
+        pattern_ys.push(point[1])
     })
     pattern.normalised = normalised
 })
@@ -70,14 +74,6 @@ pattern_divs
     .text(function (d) { return "Visualise " + d.name})
 
 // Map extents of patterns for scaling patterns individually
-pattern_xs = []
-pattern_ys = []
-data.patterns.forEach(pattern => {
-    pattern.normalised.forEach(point => {
-        pattern_xs.push(point[0])
-        pattern_ys.push(point[1])
-    })
-})
 xs_extent = d3.extent(pattern_xs)
 ys_extent = d3.extent(pattern_ys)
 

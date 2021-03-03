@@ -24,10 +24,19 @@ data.patterns.forEach(pattern => {
 })
 
 // // Pattern selector
-// Create small svg tags for patterns
 var pattern_width = 155
 var pattern_height = 100
 var pattern_margin = {top: 10, right: 10, bottom: 25, left: 10}
+
+// If no patterns found, show message
+if (data.patterns.length == 0) {
+    d3.select("#patterns_div")
+        .append("p")
+        .text("No patterns found!")
+        .style("width",  (pattern_width + pattern_margin.left + pattern_margin.right) + "px")
+}
+
+// Create small svg tags for patterns
 pattern_divs = d3.select("#patterns_div")
     .selectAll("svg")
     .data(data.patterns)

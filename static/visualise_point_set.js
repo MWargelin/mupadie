@@ -1,5 +1,9 @@
-//// Data transformation and utility functions
+//// Data transformation, utility functions and constants
 var data = point_set
+
+const CIRCLE_RADIUS = 3
+const PATTERN_CIRCLE_RADIUS = 5
+const PATH_WIDTH = 4
 
 function random_color() {
     color1 = Math.floor(Math.random() * 210)
@@ -98,7 +102,7 @@ pattern_groups
             .style("fill", "#006666")
             .transition()
             .duration(1000)
-            .attr("r", 4)
+            .attr("r", CIRCLE_RADIUS)
 
 // Functionality to toggle showing patterns in main visualisation
 function update_pattern_vis () {
@@ -128,9 +132,11 @@ function update_pattern_vis () {
                 .append("circle")
                     .attr("cx", function (d) { return x(d[0]) })
                     .attr("cy", function (d) { return y(d[1]) })
+                    .on("mouseover", hover_on_pattern)
+                    .on("mouseout", hover_off_pattern)
                     .transition()
                     .duration(300)
-                    .attr("r", 5)
+                    .attr("r", PATTERN_CIRCLE_RADIUS)
 
         pattern_path_generator = d3.line()
             .x(d => x(d[0]))
@@ -141,9 +147,11 @@ function update_pattern_vis () {
                 .attr("d", function(d) { return pattern_path_generator(d) })
                 .attr("stroke-width", 0)
                 .attr("fill", "none")
+                .on("mouseover", hover_on_pattern)
+                .on("mouseout", hover_off_pattern)
                 .transition()
                 .duration(300)
-                .attr("stroke-width", 4)
+                .attr("stroke-width", PATH_WIDTH)
     } else {
         pattern_group = svg.selectAll("." + pattern_data.name)
 
@@ -167,6 +175,39 @@ function update_pattern_vis () {
 
 d3.selectAll(".pattern-checkbox")
     .on("change", update_pattern_vis)
+
+// Functions to highlight pattern when mouse hovers over them
+function hover_on_pattern() {
+    parent_group = d3.select(this.parentNode)
+
+    parent_group
+        .selectAll("circle")
+            .transition()
+            .duration(200)
+            .attr("r", PATTERN_CIRCLE_RADIUS * 1.7)
+
+    parent_group
+        .selectAll("path")
+            .transition()
+            .duration(200)
+            .attr("stroke-width", PATH_WIDTH * 2)
+}
+
+function hover_off_pattern() {
+    parent_group = d3.select(this.parentNode)
+
+    parent_group
+        .selectAll("circle")
+            .transition()
+            .duration(200)
+            .attr("r", PATTERN_CIRCLE_RADIUS)
+
+    parent_group
+        .selectAll("path")
+            .transition()
+            .duration(200)
+            .attr("stroke-width", PATH_WIDTH)
+}
 
 
 
@@ -235,4 +276,4 @@ svg
                 .style("fill", "#006666")
                 .transition()
                 .duration(1000)
-                .attr("r", 3)
+                .attr("r", CIRCLE_RADIUS)

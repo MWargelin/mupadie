@@ -4,6 +4,7 @@ var data = point_set
 const CIRCLE_RADIUS = 3
 const PATTERN_CIRCLE_RADIUS = 5
 const PATH_WIDTH = 4
+const CIRCLE_COLOR = "#006666"
 
 function random_color() {
     color1 = Math.floor(Math.random() * 210)
@@ -99,7 +100,7 @@ pattern_groups
         .append("circle")
             .attr("cx", function(d) { return patterns_x_scale(d[0]) })
             .attr("cy", function(d) { return patterns_y_scale(d[1]) })
-            .style("fill", "#006666")
+            .style("fill", CIRCLE_COLOR)
             .transition()
             .duration(1000)
             .attr("r", CIRCLE_RADIUS)
@@ -111,6 +112,14 @@ function update_pattern_vis () {
 
     if (cb.property("checked")) {
         color = random_color()
+
+        d3.select(this.parentNode)
+            .select("button")
+                .transition()
+                .duration(300)
+                .style("background-color", color)
+                .selectAll("circle")
+                    .style("fill", "white")
 
         pattern_group = svg
             .append("g")
@@ -153,6 +162,15 @@ function update_pattern_vis () {
                 .duration(300)
                 .attr("stroke-width", PATH_WIDTH)
     } else {
+
+        d3.select(this.parentNode)
+            .select("button")
+                .transition()
+                .duration(300)
+                .style("background-color", null)
+                .selectAll("circle")
+                    .style("fill", CIRCLE_COLOR)
+
         pattern_group = svg.selectAll("." + pattern_data.name)
 
         pattern_group
@@ -273,7 +291,7 @@ svg
             .append("circle")
                 .attr("cx", function (d) { return x(d[0]) })
                 .attr("cy", function (d) { return y(d[1]) })
-                .style("fill", "#006666")
+                .style("fill", CIRCLE_COLOR)
                 .transition()
                 .duration(1000)
                 .attr("r", CIRCLE_RADIUS)

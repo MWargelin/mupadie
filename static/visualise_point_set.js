@@ -50,16 +50,30 @@ pattern_divs = d3.select("#patterns_div")
         .data(data.patterns)
         .enter()
         .append("div")
+            .attr("class", "mb-2")
 
 pattern_groups = pattern_divs
     .append("button")
         .attr("type", "button")
         .style("border-radius", "10px")
+        .on("click", button_click)
         .append("svg")
             .attr("width", pattern_width + pattern_margin.left + pattern_margin.right)
             .attr("height", pattern_height + pattern_margin.top + pattern_margin.bottom)
             .append("g")
                 .attr("transform", "translate(" + pattern_margin.left + "," + pattern_margin.top + ")")
+
+function button_click() {
+    id = "cb-" + d3.select(this).datum().name
+    checkbox = d3.select("#" + id)
+    checked = checkbox.property("checked")
+    checkbox
+        .property("checked", !checked)
+
+    // Event is not triggered when checked is changed programmatically.
+    // Call event handler manually
+    checkbox.dispatch("change")
+}
 
 // Add pattern names
 pattern_groups
@@ -75,11 +89,7 @@ pattern_divs
         .attr("type", "checkbox")
         .attr("class", "pattern-checkbox")
         .attr("id", function (d) { return "cb-" + d.name})
-
-pattern_divs
-    .append("label")
-        .attr("for", function (d) { return "cb-" + d.name})
-        .text(function (d) { return "Visualise " + d.name})
+        .style("display", "none")
 
 // Map extents of patterns for scaling patterns individually
 xs_extent = d3.extent(pattern_xs)

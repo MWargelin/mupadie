@@ -128,6 +128,7 @@ function update_pattern_vis () {
                 .transition()
                 .duration(300)
                 .style("background-color", color)
+                .style("fill", "white")  // Pattern name font color
                 .selectAll("circle")
                     .style("fill", "white")
 
@@ -178,6 +179,7 @@ function update_pattern_vis () {
                 .transition()
                 .duration(300)
                 .style("background-color", null)
+                .style("fill", null)  // Pattern name font color
                 .selectAll("circle")
                     .style("fill", CIRCLE_COLOR)
 

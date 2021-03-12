@@ -3,6 +3,7 @@ attrs==20.3.0
 click==7.1.2
 cycler==0.10.0
 Flask==1.1.2
+gunicorn==20.0.4
 iniconfig==1.1.1
 isort==5.7.0
 itsdangerous==1.1.0

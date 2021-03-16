@@ -15,8 +15,9 @@ function random_color() {
 
 pattern_xs = []
 pattern_ys = []
-data.patterns.forEach(pattern => {
-    normalised = JSON.parse(JSON.stringify(pattern.instances[0]))
+normalised_patterns = []
+data.patterns.forEach(pattern_instances => {
+    normalised = JSON.parse(JSON.stringify(pattern_instances[0]))
     const first_x = normalised[0][0];
     const first_y = normalised[0][1];
     normalised.forEach(point => {
@@ -25,7 +26,7 @@ data.patterns.forEach(pattern => {
         pattern_xs.push(point[0])
         pattern_ys.push(point[1])
     })
-    pattern.normalised = normalised
+    normalised_patterns.push(normalised)
 })
 
 
@@ -65,7 +66,6 @@ pattern_groups = pattern_divs
 
 function button_click() {
     checkbox = d3.select(this.parentNode).select("input")
-    console.log(checkbox)
     checked = checkbox.property("checked")
     checkbox
         .property("checked", !checked)
@@ -105,7 +105,7 @@ var patterns_y_scale = d3.scaleLinear()
 // Draw points for patterns
 pattern_groups
     .selectAll("circle")
-        .data(function(d) { return d.normalised })
+        .data(function(d, i) { return normalised_patterns[i] })
         .enter()
         .append("circle")
             .attr("cx", function(d) { return patterns_x_scale(d[0]) })
@@ -118,7 +118,6 @@ pattern_groups
 // Functionality to toggle showing patterns in main visualisation
 function update_pattern_vis () {
     cb = d3.select(this)
-    pattern_data = cb.datum()
     group_id = cb.attr("id") + "-group"
 
     if (cb.property("checked")) {
@@ -141,7 +140,7 @@ function update_pattern_vis () {
 
         pattern_instances = pattern_group
             .selectAll(".pattern-instance")
-                .data(pattern_data.instances)
+                .data(cb.datum())
                 .enter()
                 .append("g")
                     .attr("name", function(d, i) { return "instance-" + (i + 1) })

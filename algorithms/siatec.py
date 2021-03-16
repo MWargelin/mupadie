@@ -49,9 +49,5 @@ def _format_for_visualisation(translation_vectors):
                                  reverse=True)
     patterns = []
     for pattern in translation_vectors:
-        patterns.append(
-            {
-                'instances': _get_instances(pattern['pattern'], pattern['translation_vectors'])
-            }
-        )
+        patterns.append(_get_instances(pattern['pattern'], pattern['translation_vectors']))
     return patterns

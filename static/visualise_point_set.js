@@ -64,8 +64,8 @@ pattern_groups = pattern_divs
                 .attr("transform", "translate(" + pattern_margin.left + "," + pattern_margin.top + ")")
 
 function button_click() {
-    id = "cb-" + d3.select(this).datum().name
-    checkbox = d3.select("#" + id)
+    checkbox = d3.select(this.parentNode).select("input")
+    console.log(checkbox)
     checked = checkbox.property("checked")
     checkbox
         .property("checked", !checked)
@@ -81,14 +81,14 @@ pattern_groups
         .attr("text-anchor", "start")
         .attr("x", 0)
         .attr("y", pattern_height + 20)
-        .text(function (d) { return d.name })
+        .text(function (d, i) { return "Pattern " + (i+1) })
 
 // Checkboxes to include patterns to visualisation
 pattern_divs
     .append("input")
         .attr("type", "checkbox")
         .attr("class", "pattern-checkbox")
-        .attr("id", function (d) { return "cb-" + d.name})
+        .attr("id", function (d, i) { return "cb-pattern-" + i})
         .style("display", "none")
 
 // Map extents of patterns for scaling patterns individually
@@ -119,6 +119,7 @@ pattern_groups
 function update_pattern_vis () {
     cb = d3.select(this)
     pattern_data = cb.datum()
+    group_id = cb.attr("id") + "-group"
 
     if (cb.property("checked")) {
         color = random_color()
@@ -134,13 +135,13 @@ function update_pattern_vis () {
 
         pattern_group = svg
             .append("g")
-                .attr("class", function(d) { return pattern_data.name })
-                .style("fill", function(d) { return color })
-                .style("stroke", function(d) { return color })
+                .attr("id", group_id)
+                .style("fill", color)
+                .style("stroke", color)
 
         pattern_instances = pattern_group
             .selectAll(".pattern-instance")
-                .data(function(d) { return pattern_data.instances })
+                .data(pattern_data.instances)
                 .enter()
                 .append("g")
                     .attr("name", function(d, i) { return "instance-" + (i + 1) })
@@ -183,7 +184,7 @@ function update_pattern_vis () {
                 .selectAll("circle")
                     .style("fill", CIRCLE_COLOR)
 
-        pattern_group = svg.selectAll("." + pattern_data.name)
+        pattern_group = svg.selectAll("#" + group_id)
 
         pattern_group
             .selectAll("circle")

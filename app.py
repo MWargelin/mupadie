@@ -69,15 +69,16 @@ def analyse_file(filename):
 	if request.method == 'POST':
 		chosen_tracks = [int(value) for value, _ in request.form.items()]
 		point_set = read_midi.to_point_set(midi_filepath, chosen_tracks)
-		patterns = siatec.compute(point_set, 2)
-		point_set = {'point_set': point_set, 'patterns': patterns}
+		pattern_data = []
+		pattern_data.append(siatec.compute(point_set, 2))
+		data = {'point_set': point_set, 'pattern_data': pattern_data}
 	else:
-		point_set = None
+		data = None
 
 	return render_template('analyse.html', 
 						   filename=filename,
 						   tracks=tracks,
-						   point_set=point_set)
+						   data=data)
 
 
 if __name__ == '__main__':

@@ -1,5 +1,10 @@
 //// Data transformation, utility functions and constants
-var data = point_set
+var data = data
+
+// For now there will only be one set of results.
+// This needs to be done iteratively when more sets
+// of results is supported
+var pattern_data = data.pattern_data[0].patterns
 
 const CIRCLE_RADIUS = 3
 const PATTERN_CIRCLE_RADIUS = 5
@@ -16,7 +21,7 @@ function random_color() {
 pattern_xs = []
 pattern_ys = []
 normalised_patterns = []
-data.patterns.forEach(pattern_instances => {
+pattern_data.forEach(pattern_instances => {
     normalised = JSON.parse(JSON.stringify(pattern_instances[0]))
     const first_x = normalised[0][0];
     const first_y = normalised[0][1];
@@ -38,7 +43,7 @@ var pattern_height = 100
 var pattern_margin = {top: 10, right: 10, bottom: 25, left: 10}
 
 // If no patterns found, show message
-if (data.patterns.length == 0) {
+if (pattern_data.length == 0) {
     d3.select("#patterns_div")
         .append("p")
             .text("No patterns found!")
@@ -48,7 +53,7 @@ if (data.patterns.length == 0) {
 // Create small svg tags for patterns
 pattern_divs = d3.select("#patterns_div")
     .selectAll("svg")
-        .data(data.patterns)
+        .data(pattern_data)
         .enter()
         .append("div")
             .attr("class", "mb-2")

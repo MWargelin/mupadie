@@ -3,7 +3,7 @@
 {% block body %}
 <div class="container">
 
-  {% if point_set %}
+  {% if data %}
     <div style="display:flex;">
       <!-- This div will contain representations of found patterns -->
       <div>
@@ -24,7 +24,7 @@
 
     <!-- Pass point_set to the JS script -->
     <script>
-      var point_set = {{ point_set|tojson }}
+      var data = {{ data|tojson }}
     </script>
 
     <!-- JS script to visualise the point set -->

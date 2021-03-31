@@ -3,6 +3,7 @@
 {% block body %}
 <div class="container">
 
+  <!-- Visualisation -->
   {% if data %}
     <div style="display:flex;">
       <!-- This div will contain representations of found patterns -->
@@ -32,19 +33,43 @@
   {% endif %}
 
   <!-- Settings and parameters-->
-  <div class="p-3 m-3 bg-dark text-white rounded">
-    <h2>Settings</h2>
-    <h3>Choose tracks</h3>
-    <form action={{ url_for('analyse_file', filename=filename) }} method="POST">
-      {% for i, track in tracks %}
-        <div class="form-group form-check mb-1">
-          <input type="checkbox" class="form-check-input" id="checkbox-{{ i }}" name="{{ i }}" checked>
-          <label class="form-check-label" for={{ track }}>{{ track.name }}</label>
-        </div>
-      {% endfor %}
+  <div class="p-3 m-3 bg-success text-white rounded">
+
+    <form action={{ url_for('analyse_file', filename=filename) }} class="form-group" method="POST">
+
+      <div>
+        <h3>Select tracks</h3>
+          <div class="form-control mb-3">
+            {% for i, track in tracks %}
+              <div class="form-group form-check mb-1">
+                <input type="checkbox" class="form-check-input" id="checkbox-{{ i }}" name="track-{{ i }}" checked>
+                <label class="form-check-label" for=track-{{ track }}>{{ track.name }}</label>
+              </div>
+            {% endfor %}
+          </div>
+      </div>
+
+      <div>
+        <h3>Select algorithms</h3>
+          <div id="algorithms"></div>
+          <label for="algorithm-dropdown">Add algorithm</label>
+          <br>
+          <div class="d-inline-flex mb-3">
+            <select class="form-select" aria-label="Select algorithm" name="algorithm-dropdown" id="algorithm-dropdown">
+              <option value="SIATEC">SIATEC</option>
+              <option value="time-warp invariant">time-warp invariant</option>
+            </select>
+            <input type=button class="btn btn-outline-light ms-2" value="+" id="add-algorithm"></input>
+          </div>
+      </div>
+
+      <br>
       <input class="btn btn-outline-light mt-2" type="submit" id="trackSubmit"></input>
     </form>
   </div>
+
+  <!-- JS Script for adding algorithms dynamically to form -->
+  <script type="text/javascript" src={{ url_for('static', filename='dynamic_form.js') }}></script>
 
 </div>
 {% endblock %}

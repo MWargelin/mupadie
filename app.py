@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 
 from read_midi import read_midi
-from algorithms import siatec
+from algorithms import siatec, time_warp_invariant
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'midi_files'
@@ -61,16 +61,52 @@ def upload_file():
 	return redirect(url_for('analyse_file', filename=filename))
 
 
+def _point_set_from_form(form, midi_filepath):
+	selected_tracks = []
+	prefix = 'track-'
+	for key in form.keys():
+		if key.startswith(prefix):
+			selected_tracks.append(int(key[len(prefix):]))
+
+	point_set = read_midi.to_point_set(midi_filepath, selected_tracks)
+
+	return point_set
+
+
+def _pattern_data_from_form(form, point_set):
+	pattern_data = []
+
+	# SIATEC
+	min_pattern_length = form.getlist('siatec-min-pattern-length')
+	min_pattern_length = [int(x) for x in min_pattern_length]
+	for i in range(len(min_pattern_length)):
+		pattern_data.append(
+			siatec.compute(
+				point_set=point_set,
+				min_pattern_length=min_pattern_length[i]
+			)
+		)
+
+	# timewarp-invariant algorithm
+	window = form.getlist('timewarp-window')
+	for i in range(len(window)):
+		pattern_data.append(
+			time_warp_invariant.compute(
+				point_set=point_set
+			)
+		)
+
+	return pattern_data
+
+
 @app.route('/analyse/<path:filename>', methods=['GET', 'POST'])
 def analyse_file(filename):
 	midi_filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 	tracks = read_midi.tracks_enumerate(midi_filepath)
 
 	if request.method == 'POST':
-		chosen_tracks = [int(value) for value, _ in request.form.items()]
-		point_set = read_midi.to_point_set(midi_filepath, chosen_tracks)
-		pattern_data = []
-		pattern_data.append(siatec.compute(point_set, 2))
+		point_set = _point_set_from_form(request.form, midi_filepath)
+		pattern_data = _pattern_data_from_form(request.form, point_set)
 		data = {'point_set': point_set, 'pattern_data': pattern_data}
 	else:
 		data = None

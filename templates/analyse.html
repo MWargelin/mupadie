@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<div class="container">
+<div class="container-fluid">
 
   <!-- Visualisation -->
   {% if data %}
@@ -31,8 +31,11 @@
     <!-- JS script to visualise the point set -->
     <script type="text/javascript" src={{ url_for('static', filename='visualise_point_set.js') }}></script>
   {% endif %}
+</div>
 
   <!-- Settings and parameters-->
+<div class="container-sm mt-5">
+
   <div class="p-3 m-3 bg-success text-white rounded">
 
     <form action={{ url_for('analyse_file', filename=filename) }} class="form-group" method="POST">

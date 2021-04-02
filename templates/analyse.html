@@ -5,20 +5,7 @@
 
   <!-- Visualisation -->
   {% if data %}
-    <div class="d-flex">
-      <!-- This div will contain representations of found patterns -->
-      <div>
-        <div id="patterns_div" style="max-height: 600px; width:min-content; overflow:scroll;"></div>
-      </div>
-      <div style="overflow:scroll;">
-        <!-- Point set visualisation -->
-        <div id="point_set_div">
-
-            <!-- Create a div where the point set will be visualised -->
-            <div id="point_set_vis"></div>
-        </div>
-      </div>
-    </div>
+    <div id="visualisation" class="container-fluid"></div>
 
     <!-- Import D3 -->
     <script src="https://d3js.org/d3.v6.min.js"></script>

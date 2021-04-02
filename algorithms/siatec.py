@@ -47,7 +47,7 @@ def _format_for_visualisation(translation_vectors):
     translation_vectors = sorted(translation_vectors,
                                  key=lambda pattern: len(pattern['pattern']),
                                  reverse=True)
-    result = {'id': 'SIATEC'}
+    result = {'meta': 'SIATEC'}
     result['patterns'] = [_get_instances(pattern['pattern'], pattern['translation_vectors'])
                           for pattern
                           in translation_vectors]

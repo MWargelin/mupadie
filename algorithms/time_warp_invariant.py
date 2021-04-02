@@ -89,6 +89,6 @@ def _process_group(group):
 
 def _format_for_visualisation(patterns):
 	return {
-		'id': 'time_warp_invariant',
+		'meta': 'Transposition and time-warp invariant algorithm',
 		'patterns': patterns
 	}

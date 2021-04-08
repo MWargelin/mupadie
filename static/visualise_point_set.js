@@ -8,6 +8,7 @@
 //                 {
 //                     "pattern_id": "algorithm-0-pattern-0",
 //                     "normalised": [[i1x1minusx1, i1y1minusy1], [i1x2minusx1, i1y2minusy1], ...],
+//                     "color": "#588c7e",
 //                     "instances":[
 //                         [[p1i1x1, p1i1y1], [p1i1x2, p1i1y2], ...],
 //                         [[p1i2x1, p1i2y1], [p1i2x2, p1i2y2], ...],
@@ -21,6 +22,10 @@
 //     ]
 // }
 
+
+
+//// Constants, data processing and utility functions
+
 var data = data
 
 const CIRCLE_RADIUS = 3
@@ -29,6 +34,23 @@ const PATH_WIDTH = 4
 const CIRCLE_COLOR = "#006666"
 
 const main_div = d3.select("#visualisation")
+
+// Define first few colors of patterns manually to ensure
+// contrasting colors. If there are more result sets, assign
+// random colour
+function pattern_color(i) {
+    colors = [
+        "#45548b",
+        "#a14d51",
+        "#89c14d",
+        "#553a09"
+    ]
+    if (i < colors.length) {
+        return colors[i]
+    } else {
+        return random_color()
+    }
+}
 
 function random_color() {
     color1 = Math.floor(Math.random() * 210)
@@ -50,16 +72,26 @@ function normalise_pattern_instance(pattern_instance) {
 
 // Turn patterns to dicts
 // assign individual id for each pattern
+// assign color for each result set
 // and compute a normalised instance for pattern buttons
 for (let i = 0; i < data.pattern_data.length; i++) {
     var result_dict = data.pattern_data[i];
     var algorithm_i = "algorithm-" + i
+    var color = pattern_color(i)
     for (let j = 0; j < result_dict.patterns.length; j++) {
         var pattern_i = "pattern-" + j
+
+        // If there's only one result set, use random colors
+        // for each pattern. Otherwise one color per result set
+        if (data.pattern_data.length === 1) {
+            color = random_color()
+        }
+
         result_dict.patterns[j] = {
             "pattern_id": algorithm_i + "-" + pattern_i,
             "normalised": normalise_pattern_instance(result_dict.patterns[j][0]),
-            "instances": result_dict.patterns[j]
+            "instances": result_dict.patterns[j],
+            "color": color
         }
     }
 }
@@ -230,7 +262,7 @@ function button_click() {
         // Pattern is not visualised -> Button was off, now on
 
         // Change button appearance
-        color = random_color()
+        color = button.datum().color
 
         button
             .transition()

@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 
 {% block body %}
-  <div class="container">Welcome to test computational musicology algorithms for repeated pattern discovery. Start by uploading a MIDI file with the form above.</div>
+  <div class="container">
+      <h1>Mupadie</h1>
+      <p>
+        Welcome! Mupadie is an application to test and evaluate musical pattern discovery algorithms. Start by uploading a piece of music as a MIDI file with the form above to visualise musical patterns in that piece.
+      </p>
+      <p>
+        You can also upload your own musical pattern discovery results as a JSON file, if you want to visualise patterns found by an algorithm not included in this application! <a href={{ url_for('json_instructions') }}>See further instructions uploading JSON files.</a>
+      </p>
+  </div>
 {% endblock %}

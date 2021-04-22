@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block body %}
+  <div class="container">
+      <h1>Submitting data as JSON</h1>
+      <p>If you want to visualise musical pattern discovery algorithm results of an algorithm that is not included in Mupadie, you can transform the output of the algorithm to conform to the data structure Mupadie uses internally and provide any pattern result set as a JSON object. You can also of course provide human analyst results for comparison by following the same format, if you such data available. If the data structure is followed correctly, Mupadie should then be able to visualise your results!</p>
+
+      <h1>Quick reference</h1>
+      <pre>
+{
+    "point_set": [[x1, y1], [x2, y2], ...],
+    "pattern_data": [
+        {
+            "meta": "Algorithm X",
+            "patterns": [
+                [
+                    [[p1i1x1, p1i1y1], [p1i1x2, p1i1y2], ...],
+                    [[p1i2x1, p1i2y1], [p1i2x2, p1i2y2], ...],
+                    ...
+                ],
+                [
+                    [[p2i1x1, p2i1y1], [p2i1x2, p2i1y2], ...],
+                    [[p2i2x1, p2i2y1], [p2i2x2, p2i2y2], ...],
+                    ...
+                ],
+                ...            
+            ]
+        },
+        {
+            "meta": "Algorithm Y",
+            "patterns": ...
+        },
+        ...
+    ]
+}
+    </pre>
+
+    <h1>Breakdown of the data structure</h1>
+    <p>The data should be provided as a JSON object with two name-value pairs: <code>"point_set"</code> containing the notes of the source piece of music, and <code>"pattern_data"</code> containing the pattern data.</p>
+    
+    <h2>Point set</h2>
+    <p><code>"point_set"</code> contains the notes of the source piece of music as points. Our goal is:</p>
+    <pre>"point_set": [[x1, y1], [x2, y2], ...]</pre>
+    <p>We first define how note is represented and then form a point set from notes.</p>
+    <h4>Note (point)</h4>
+    <p>Notes are represented as lists of two items: onset (x) and pitch (y). The list can contain more items, but they are disregarded by the visualization. Onset can be any number (float or int). Pitch should be MIDI pitch number (integer from 0 to 127):</p>
+    <pre>[x, y]</pre>
+
+    <h4>Point set</h4>
+    <p>The point set is then simply all notes of a piece of music in a list:</p>
+    <pre>[[x1, y1], [x2, y2], ...]</pre>
+    <p>We are now set with the first part of the data structure:</p>
+    <pre>
+{
+    "point_set": [[x1, y1], [x2, y2], ...],
+    ...
+}
+    </pre>
+
+    <h2>Pattern data</h2>
+    <p><code>"pattern_data"</code> contains the data of the discovered patterns. You can also provide multiple sets of results to compare them against each other in Mupadie. Our goal is:</p>
+    <pre>
+"pattern_data": [
+  // Algorithm results object
+  {
+      "meta": "Algorithm X",
+      "patterns": [
+          // Pattern
+          [
+              [[p1i1x1, p1i1y1], [p1i1x2, p1i1y2], ...],  // Pattern instance
+              [[p1i2x1, p1i2y1], [p1i2x2, p1i2y2], ...],
+              ...
+          ],
+          [
+              [[p2i1x1, p2i1y1], [p2i1x2, p2i1y2], ...],
+              [[p2i2x1, p2i2y1], [p2i2x2, p2i2y2], ...],
+              ...
+          ],
+          ...            
+      ]
+  },  
+  {
+      "meta": "Algorithm Y",
+      "patterns": ...
+  },
+  ...
+]
+    </pre>
+    <p>We again explain the structure piece by piece, starting from inside, progressing to the whole structure of a pattern result set.</p>
+
+    <h4>Pattern instance</h4>
+    <p>An instance of a particular pattern is represented as list of notes, similarly to a point set. A pattern instance should contain a subset of notes present in the <code>"point_set"</code> (Mupadie does not validate this, but disregarding this will result in nonsense visualisation).</p>
+    <pre>[[i1x1, i1y1], [i1x2, i1y2], ...]</pre>
+
+    <h4>Pattern</h4>
+    <p>A Pattern is represented as a list that contains each instance of that pattern.</p>
+    <pre>
+[
+    [[i1x1, i1y1], [i1x2, i1y2], ...],
+    [[i2x1, i2y1], [i2x2, i2y2], ...],
+    ...
+]
+    </pre>
+
+  <h4>Algorithm results object</h4>
+  <p>An object that documents the results of one algorithm. The object should include the discovered patterns as a list of patterns under the key "patterns". Even if you only have one pattern, it should be placed inside a list.</p>
+  <p>The object can also optionally include key "meta": if used, it can contain any string. This string is rendered along with the results to help identify the result set, so the value could for example include the name of the algorithm and description of parameters that the algorithm was run with.</p>
+  <pre>
+{
+    "meta": "Algorithm X: parameter a = n",
+    "patterns": [
+        [
+            [[p1i1x1, p1i1y1], [p1i1x2, p1i1y2], ...],
+            [[p1i2x1, p1i2y1], [p1i2x2, p1i2y2], ...],
+            ...
+        ],
+        [
+            [[p2i1x1, p2i1y1], [p2i1x2, p2i1y2], ...],
+            [[p2i2x1, p2i2y1], [p2i2x2, p2i2y2], ...],
+            ...
+        ],
+        ...            
+    ]
+}
+  </pre>
+  
+  <h4>Pattern data</h4>
+  <p>Your algorithm results objects should be placed in a list under the key <code>pattern_data</code>. If you want to visualise many algorithm results simultaneously, you can provide many algorithm results objects in the list. Even if you want to visualise the results of only one algorithm, the algorithm results object should be placed inside a list.
+  <pre>
+"pattern_data": [
+    {
+        "meta": "Algorithm X",
+        "patterns": [
+            [
+                [[p1i1x1, p1i1y1], [p1i1x2, p1i1y2], ...],
+                [[p1i2x1, p1i2y1], [p1i2x2, p1i2y2], ...],
+                ...
+            ],
+            [
+                [[p2i1x1, p2i1y1], [p2i1x2, p2i1y2], ...],
+                [[p2i2x1, p2i2y1], [p2i2x2, p2i2y2], ...],
+                ...
+            ],
+            ...            
+        ]
+    },
+    {
+        "meta": "Algorithm Y",
+        "patterns": ...
+    },
+    ...
+]
+  </pre>
+
+  <h2>Final steps</h2>
+  <p><code>"point_set"</code> and <code>"pattern_data"</code> should be merged into one object:</p>
+  <pre>
+{
+    "point_set": ...,
+    "pattern_data": ...
+}
+  </pre>
+  <p>So all in all the data structure should be:</p>
+  <pre>
+{
+    "point_set": [[x1, y1], [x2, y2], ...],
+    "pattern_data": [
+        {
+            "meta": "Algorithm X",
+            "patterns": [
+                [
+                    [[p1i1x1, p1i1y1], [p1i1x2, p1i1y2], ...],
+                    [[p1i2x1, p1i2y1], [p1i2x2, p1i2y2], ...],
+                    ...
+                ],
+                [
+                    [[p2i1x1, p2i1y1], [p2i1x2, p2i1y2], ...],
+                    [[p2i2x1, p2i2y1], [p2i2x2, p2i2y2], ...],
+                    ...
+                ],
+                ...            
+            ]
+        },
+        {
+            "meta": "Algorithm Y",
+            "patterns": ...
+        },
+        ...
+    ]
+}
+  </pre>
+
+  <p>Once complete, save the data in a file with the extension <code>".json"</code> and upload the file using the form at the top of the page to visualise it!</p>
+  </div>
+{% endblock %}

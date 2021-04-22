@@ -131,5 +131,10 @@ def analyse_file(filename):
 						   data=data)
 
 
+@app.route('/json_instructions')
+def json_instructions():
+	return render_template('json_instructions.html')
+
+
 if __name__ == '__main__':
 	app.run(debug=True)

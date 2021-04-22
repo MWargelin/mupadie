@@ -20,6 +20,7 @@
   {% endif %}
 </div>
 
+{% if tracks %}
   <!-- Settings and parameters-->
 <div class="container-sm mt-5">
 
@@ -62,4 +63,5 @@
   <script type="text/javascript" src={{ url_for('static', filename='dynamic_form.js') }}></script>
 
 </div>
+{% endif %}
 {% endblock %}

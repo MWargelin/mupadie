@@ -1,4 +1,5 @@
 import os
+import json
 
 from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
@@ -9,7 +10,7 @@ from algorithms import siatec, time_warp_invariant
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'midi_files'
 app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024	# Allow max. 1MB files
-app.config['ALLOWED_EXTENSIONS'] = {'.mid', '.midi'}
+app.config['ALLOWED_EXTENSIONS'] = {'.mid', '.midi', '.json'}
 app.config['SECRET_KEY'] = 'computationalmusicology'
 
 
@@ -34,7 +35,7 @@ def file_validation(file):
 
 	# The file is midi file
 	if not is_allowed_file_type(file.filename):
-		flash('File is not a MIDI file', 'danger')
+		flash('File is not a MIDI or JSON file', 'danger')
 		return False
 
 	# TODO: Add content validation?
@@ -101,15 +102,28 @@ def _pattern_data_from_form(form, point_set):
 
 @app.route('/analyse/<path:filename>', methods=['GET', 'POST'])
 def analyse_file(filename):
-	midi_filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-	tracks = read_midi.tracks_enumerate(midi_filepath)
+	ext = os.path.splitext(filename)[1]
 
-	if request.method == 'POST':
-		point_set = _point_set_from_form(request.form, midi_filepath)
-		pattern_data = _pattern_data_from_form(request.form, point_set)
-		data = {'point_set': point_set, 'pattern_data': pattern_data}
+	filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+	if ext == '.json':
+		# User uploaded results in json form
+
+		with open(filepath, 'r') as json_file:
+			data = json.loads(json_file.read())
+		tracks = None
+
 	else:
-		data = None
+		# User uploaded a MIDI file
+
+		tracks = read_midi.tracks_enumerate(filepath)
+
+		if request.method == 'POST':
+			point_set = _point_set_from_form(request.form, filepath)
+			pattern_data = _pattern_data_from_form(request.form, point_set)
+			data = {'point_set': point_set, 'pattern_data': pattern_data}
+		else:
+			data = None
 
 	return render_template('analyse.html', 
 						   filename=filename,

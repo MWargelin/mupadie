@@ -90,10 +90,12 @@ def _pattern_data_from_form(form, point_set):
 
 	# timewarp-invariant algorithm
 	window = form.getlist('timewarp-window')
+	window = [int(x) for x in window]
 	for i in range(len(window)):
 		pattern_data.append(
 			time_warp_invariant.compute(
-				point_set=point_set
+				point_set=point_set,
+				window=window[i]
 			)
 		)
 

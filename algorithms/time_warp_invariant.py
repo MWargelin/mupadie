@@ -1,13 +1,28 @@
 from collections import defaultdict
 
 
-def compute(point_set):
+def compute(point_set, window=0):
+	"""Discover patterns from music using a transposition and time-warp
+	invariant algorithm.
+
+	Args:
+		window: The maximum number of notes there can be in between
+		consecutive notes in a pattern. If window is set to 0, window
+		is set to unrestricted mode, where there can be arbitrarily many
+		notes between consecutive notes.
+	"""
 	point_set.sort()
 	relabeled_set, mapping = _relabel_x(point_set)
 	note_pairs = _note_pair_groups(relabeled_set)
 	patterns = []
+
+	if window == 0:
+		_window = len(point_set)
+	else:
+		_window = window
+
 	for group in note_pairs.values():
-		patterns.append(_process_group(group))
+		patterns.append(_process_group(group, _window))
 
 	# Map notes back to the original notes
 	for instances in patterns:
@@ -15,7 +30,7 @@ def compute(point_set):
 			mapped = [mapping[note] for note in instances[i]]
 			instances[i] = mapped
 
-	return _format_for_visualisation(patterns)
+	return _format_for_visualisation(patterns, window)
 
 
 def _relabel_x(point_set):
@@ -57,7 +72,7 @@ def _note_pair_groups(point_set):
 	return note_pairs
 
 
-def _process_group(group):
+def _process_group(group, window):
 	group.sort(key=lambda pair: (pair[0][0], pair[1][0]))
 
 	arr = [(pair[0][0], pair[1][0]) for pair in group]
@@ -69,7 +84,11 @@ def _process_group(group):
 
 	for i in range(1, n):
 		for j in range(0, i):
-			if arr[i][0] > arr[j][0] and arr[i][1] > arr[j][1] and lis[i] < lis[j] + 1:
+			if arr[i][0] > arr[j][0] and \
+					arr[i][1] > arr[j][1] and \
+					arr[i][0] - arr[j][0] <= window and \
+					arr[i][1] - arr[j][1] <= window and \
+					lis[i] < lis[j] + 1:
 				lis[i] = lis[j] + 1
 				index[i] = j
 
@@ -87,8 +106,13 @@ def _process_group(group):
 	return pattern
 
 
-def _format_for_visualisation(patterns):
+def _format_for_visualisation(patterns, window):
+	if window == 0:
+		window_string = "unrestricted"
+	else:
+		window_string = window
+
 	return {
-		'meta': 'Transposition and time-warp invariant algorithm',
+		'meta': f'Transposition and time-warp invariant algorithm. Window: {window_string}',
 		'patterns': patterns
 	}

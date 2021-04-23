@@ -5,7 +5,7 @@ def compute(point_set, min_pattern_length=2):
     mtps = _maximal_translatable_patterns(point_set, min_length=min_pattern_length)
     vector_table = _vector_table(point_set)
     translation_vectors = _translation_vectors(mtps, vector_table)
-    result = _format_for_visualisation(translation_vectors)
+    result = _format_for_visualisation(translation_vectors, min_pattern_length)
     return result
 
 
@@ -43,11 +43,11 @@ def _get_instances(pattern, translation_vectors):
     return instances
 
 
-def _format_for_visualisation(translation_vectors):
+def _format_for_visualisation(translation_vectors, min_pattern_length):
     translation_vectors = sorted(translation_vectors,
                                  key=lambda pattern: len(pattern['pattern']),
                                  reverse=True)
-    result = {'meta': 'SIATEC'}
+    result = {'meta': f'SIATEC. Minimum pattern length: {min_pattern_length}'}
     result['patterns'] = [_get_instances(pattern['pattern'], pattern['translation_vectors'])
                           for pattern
                           in translation_vectors]

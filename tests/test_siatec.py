@@ -53,7 +53,7 @@ def test_get_instances():
 def test_compute(unsorted_point_set):
     result = siatec.compute(unsorted_point_set, min_pattern_length=2)
     assert result == {
-        'meta': 'SIATEC',
+        'meta': 'SIATEC. Minimum pattern length: 2',
         'patterns': [
             [[(1,1), (1,3), (2,2)], [(2,1), (2,3), (3,2)]],
             [[(2,1), (2,2)], [(2,2), (2,3)]],

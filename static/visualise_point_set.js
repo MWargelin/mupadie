@@ -100,10 +100,9 @@ for (let i = 0; i < data.pattern_data.length; i++) {
 
 //// Main visualisation
 // Set the constants, dimensions and margins of the graph
-const last_onset = data.point_set[data.point_set.length - 1][0]
 const max_midi_pitch = 127
 var margin = {top: 10, right: 30, bottom: 50, left: 70},
-    width = Math.round(last_onset / 7500000),
+    width = data.point_set.length * 15
     height = 600 - margin.top - margin.bottom
 
 // Append the svg object to the page
@@ -117,6 +116,7 @@ var svg = main_div
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
 // Add X axis
+const last_onset = data.point_set[data.point_set.length - 1][0]
 var x = d3.scaleLinear()
     .domain([0, last_onset])
     .range([0, width])

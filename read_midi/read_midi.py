@@ -18,6 +18,7 @@ def to_point_set(path, chosen_tracks):
 	point_set = set()
 	mid = mido.MidiFile(path)
 	mid = _filter_tracks(mid, chosen_tracks)
+	mid = mido.merge_tracks(mid.tracks)
 
 	note_onset = 0
 	tempo = 1

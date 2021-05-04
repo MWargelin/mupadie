@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'midi_files'
 app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024	# Allow max. 1MB files
 app.config['ALLOWED_EXTENSIONS'] = {'.mid', '.midi', '.json'}
-app.config['SECRET_KEY'] = 'computationalmusicology'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', default='dev')
 
 
 @app.route('/')

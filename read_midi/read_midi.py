@@ -3,6 +3,18 @@ from flask import flash
 
 
 def to_point_set(path, chosen_tracks):
+	"""Produce a point set representation of MIDI file in given path.
+
+	Args:
+		path: path to the MIDI file
+		chosen_tracks: list of track numbers that the user wants to
+		be included in the point set
+
+	Returns:
+		Point set representation of MIDI file in given path. The point
+		set is a list of notes, and notes are tuples of note onset and
+		MIDI pitch number
+	"""
 	point_set = set()
 	mid = mido.MidiFile(path)
 	mid = _filter_tracks(mid, chosen_tracks)
@@ -28,6 +40,14 @@ def _filter_tracks(mid, chosen_tracks):
 	This is done to avoid having to delete the tracks completely -
 	deleting the tracks leads to a bug when removing the first track
 	of a file.
+
+	Args:
+		mid: MIDI object
+		chosen_tracks: the track numbers of the tracks that the user
+		wants to be included in the point set in a list
+
+	Returns:
+		The given MIDI object, with the not chosen tracks filtered out
 	"""
 	for i, track in enumerate(mid.tracks):
 		if i not in chosen_tracks:
@@ -38,10 +58,19 @@ def _filter_tracks(mid, chosen_tracks):
 
 
 def _limit_point_set_length(point_set, limit):
-	"""Limit the length of point set by the number set in
-	'limit' in order to not crash the program with too
-	long inputs. If point set has to be limited, user is informed
+	"""Limit the length of point set by the given limit
+	in order to not crash the program with too
+	long inputs. If point set is to be limited, user is informed
 	with a flash message.
+
+	Args:
+		point_set: The point_set to be limited
+		limit: maximum number of notes in the limited point set
+
+	Returns:
+		The given point set limited to contain the number of notes
+		specified in given limit. The notes in order from the beginning
+		of the piece remain, while notes from the end are filtered out.
 	"""
 	if len(point_set) > limit:
 		flash('Input was limited to 1000 notes to avoid crashing', 'warning')
@@ -50,5 +79,13 @@ def _limit_point_set_length(point_set, limit):
 
 
 def tracks_enumerate(path):
-    mid = mido.MidiFile(path)
-    return enumerate(mid.tracks)
+	"""Get enumerated tracks of MIDI file in given path.
+
+	Args:
+		path: path to the MIDI file
+
+	Returns:
+		Enumerated tracks of the MIDI file
+	"""
+	mid = mido.MidiFile(path)
+	return enumerate(mid.tracks)

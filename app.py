@@ -16,24 +16,40 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', default='dev')
 
 @app.route('/')
 def index():
+	"""Route for home page of the application."""
 	return render_template('index.html')
 
 
 def is_allowed_file_type(filename):
-	"""Function for testing whether file type is in the list
-	of allowed file types"""
+	"""Function for testing whether file type of an uploaded file
+	is in the list of allowed file types.
+
+	Args:
+		filename: Name of the file.
+
+	Returns:
+		True if file type is allowed, false if not.
+	"""
 	ext = os.path.splitext(filename)[1]
 	return ext in app.config['ALLOWED_EXTENSIONS']
 
 
 def file_validation(file):
+	"""Function that determines whether the uploaded file is valid or not.
+
+	Args:
+		file: Uploaded file.
+
+	Returns:
+		True if file is valid, false if not.
+	"""
 	# A file is chosen
 	if file.filename == '':
 		flash('File not chosen', 'danger')
 		return False
 		
 
-	# The file is midi file
+	# The file is of allowed file type
 	if not is_allowed_file_type(file.filename):
 		flash('File is not a MIDI or JSON file', 'danger')
 		return False
@@ -45,7 +61,7 @@ def file_validation(file):
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-	"""Route to upload MIDI files to be analysed."""
+	"""Route to upload files."""
 
 	f = request.files['file']
 
@@ -63,6 +79,16 @@ def upload_file():
 
 
 def _point_set_from_form(form, midi_filepath):
+	"""Handles the form in which the user determines which tracks
+	of the file to include, creating a point set representation of it.
+
+	Args:
+		form: The form data.
+		midi_filepath: Filepath to the MIDI file.
+
+	Returns:
+		Point set according to the form sent by the user.
+	"""
 	selected_tracks = []
 	prefix = 'track-'
 	for key in form.keys():
@@ -75,6 +101,17 @@ def _point_set_from_form(form, midi_filepath):
 
 
 def _pattern_data_from_form(form, point_set):
+	"""Handles the form in which the user determines which algorithms
+	to run with the uploaded file, and computes the algorithm results.
+
+	Args:
+		form: The form data
+		point_set: Point set representation of the uploaded file.
+
+	Returns:
+		Musical pattern discovery results of the algorithms
+		chosen by the user.
+	"""
 	pattern_data = []
 
 	# SIATEC
@@ -104,6 +141,8 @@ def _pattern_data_from_form(form, point_set):
 
 @app.route('/analyse/<path:filename>', methods=['GET', 'POST'])
 def analyse_file(filename):
+	"""Route to the parameter settings and visualisation page."""
+
 	ext = os.path.splitext(filename)[1]
 
 	filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -135,6 +174,9 @@ def analyse_file(filename):
 
 @app.route('/json_instructions')
 def json_instructions():
+	"""Route to the page that describes how to upload algorithm
+	results as JSON files to the application.
+	"""
 	return render_template('json_instructions.html')
 
 

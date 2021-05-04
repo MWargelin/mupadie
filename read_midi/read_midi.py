@@ -73,7 +73,7 @@ def _limit_point_set_length(point_set, limit):
 		of the piece remain, while notes from the end are filtered out.
 	"""
 	if len(point_set) > limit:
-		flash('Input was limited to 1000 notes to avoid crashing', 'warning')
+		flash(f'Input was limited to {limit} notes to avoid crashing', 'warning')
 
 	return point_set[:limit]
 

@@ -7,7 +7,7 @@ def to_point_set(path, chosen_tracks):
 	mid = _filter_tracks(mid, chosen_tracks)
 
 	note_onset = 0
-	tempo = 0
+	tempo = 1
 	for msg in mid:
 		if msg.type == 'set_tempo':
 			tempo = msg.tempo

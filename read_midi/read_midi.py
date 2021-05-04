@@ -1,4 +1,5 @@
 import mido
+from flask import flash
 
 
 def to_point_set(path, chosen_tracks):
@@ -15,7 +16,10 @@ def to_point_set(path, chosen_tracks):
 		if msg.type == 'note_on' and msg.velocity != 0:
 			point_set.add((note_onset, msg.note))
 
-	return sorted(point_set)
+	point_set = sorted(point_set)
+	point_set = _limit_point_set_length(point_set, 1000)
+
+	return point_set
 
 
 def _filter_tracks(mid, chosen_tracks):
@@ -31,6 +35,18 @@ def _filter_tracks(mid, chosen_tracks):
 				if msg.type == 'note_on':
 					msg.velocity = 0
 	return mid
+
+
+def _limit_point_set_length(point_set, limit):
+	"""Limit the length of point set by the number set in
+	'limit' in order to not crash the program with too
+	long inputs. If point set has to be limited, user is informed
+	with a flash message.
+	"""
+	if len(point_set) > limit:
+		flash('Input was limited to 1000 notes to avoid crashing', 'warning')
+
+	return point_set[:limit]
 
 
 def tracks_enumerate(path):

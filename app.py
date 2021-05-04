@@ -139,4 +139,11 @@ def json_instructions():
 
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	environment = os.environ.get('ENVIRONMENT', default='development')
+
+	if environment == 'production':
+		debug = False
+	else:
+		debug = True
+
+	app.run(debug=debug)

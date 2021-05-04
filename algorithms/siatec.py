@@ -4,7 +4,7 @@ def compute(point_set, min_pattern_length=2):
 	"""Discover patterns from music using the SIATEC algorithm.
 
 	Args:
-		min_pattern_length: the minimum number of notes a pattern
+		min_pattern_length: The minimum number of notes a pattern
 			must have.
 
 	Returns:
@@ -39,7 +39,7 @@ def _vector_table(point_set):
 def _maximal_translatable_patterns(point_set, min_length=0):
 	"""Returns maximal translatable patterns of the given point set.
 
-	This is essentially the algorithm SIA: For each possible translation vector,
+	This is essentially the SIA algorithm: For each possible translation vector,
 	return the largest set of points that can be translated by that vector to
 	give another point in the point set.
 
@@ -74,7 +74,7 @@ def _translation_vectors(mtps, vector_table):
 
 	Args:
 		mtps: All MTPs of a point set
-		vector_table: vector table computed for the same point set that
+		vector_table: Vector table computed for the same point set that
 			the MTPs are extracted from.
 
 	Returns:
@@ -96,8 +96,8 @@ def _get_instances(pattern, translation_vectors):
 	all those translation vectors.
 
 	Args:
-		pattern: the pattern to be translated
-		translation_vectors: translation vectors for the pattern.
+		pattern: The pattern to be translated.
+		translation_vectors: Translation vectors for the pattern.
 
 	Returns:
 		A list of pattern instances, containing the original pattern translated
@@ -116,7 +116,7 @@ def _format_for_visualisation(translation_vectors, min_pattern_length):
 	Args:
 		translation_vectors: All patterns and their translation vectors
 			of a musical piece.
-		min_pattern_length: the minimum pattern length parameter as set
+		min_pattern_length: The minimum pattern length parameter as set
 			by the user of the application.
 
 	Returns:

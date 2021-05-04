@@ -7,13 +7,14 @@ def compute(point_set, window=0):
 
 	Args:
 		window: The maximum number of notes there can be in between
-		consecutive notes in a pattern. If window is set to 0, window
-		is set to unrestricted mode, where there can be arbitrarily many
-		notes between consecutive notes.
+            consecutive notes in a pattern. If window is set to 0, window
+            is set to unrestricted mode, where there can be arbitrarily many
+            notes between consecutive notes. Notes played at the same time
+            are considered as "one note" by the window parameter.
 
 	Returns:
 		Patterns discovered from the given point set using a time-warp
-		and transposition invariant algorithm
+		and transposition invariant algorithm.
 	"""
 	point_set.sort()
 	relabeled_set, mapping = _relabel_x(point_set)
@@ -52,11 +53,11 @@ def _relabel_x(point_set):
 	Assumes that the given point set is sorted.
 
 	Args:
-		point_set: the point set to relabel
+		point_set: The point set to relabel.
 
 	Returns:
-		a tuple: the point set relabeled, and a mapping dictionary with the
-		relabeled points as keys and the original points as values
+		A tuple: the point set relabeled, and a mapping dictionary with the
+		relabeled points as keys and the original points as values.
 	"""
 	relabeled_set = []
 	mapping = {}
@@ -80,12 +81,12 @@ def _note_pair_groups(point_set):
 	group them according to the interval between the note pair.
 
 	Args:
-		point_set: point set to use
+		point_set: The point set to use.
 
 	Returns:
 		A dictionary with intervals as keys, with list of all note pairs in
 		the given point set where the interval between the pair is the interval
-		in the key as value
+		in the key as value.
 	"""
 	note_pairs = defaultdict(list)
 
@@ -100,14 +101,13 @@ def _note_pair_groups(point_set):
 
 
 def _process_group(group, window):
-	"""Find the longest pattern from given group
+	"""Find the longest pattern from given group.
 
 	Args:
-		group: group of note pairs to find the longest pattern
-		from
+		group: Group of note pairs to find the longest pattern from.
 		window: the number of notes there can be in between
-		consecutive notes of a pattern. Notes played at the
-		same time are counted as "one note".
+            consecutive notes of a pattern. Notes played at the
+            same time are counted as "one note".
 
 	Returns:
 		The longest pattern in the group as a list of two
@@ -151,11 +151,11 @@ def _format_for_visualisation(patterns, window):
 	structure used in the Mupadie visualisation.
 
 	Args:
-		patterns: the discovered patterns
-		window: the window parameter as set by the user of the application
+		patterns: The discovered patterns.
+		window: The window parameter as set by the user of the application.
 
 	Returns:
-		A dictionary documenting the pattern discovery results
+		A dictionary documenting the pattern discovery results.
 	"""
 	if window == 0:
 		window_string = 'unrestricted'

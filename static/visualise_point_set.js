@@ -40,10 +40,10 @@ const main_div = d3.select("#visualisation")
 // random colour
 function pattern_color(i) {
     colors = [
-        "#45548b",
-        "#a14d51",
-        "#89c14d",
-        "#553a09"
+        "rgb(3,34,77)",
+        "rgb(226,169,38)",
+        "rgb(15,176,142)",
+        "rgb(233,105,51)",
     ]
     if (i < colors.length) {
         return colors[i]
@@ -344,21 +344,36 @@ function button_click() {
     }
 }
 
+// Function that returns a color of a similar but darker shade than
+// what is given to it
+function darker_color(rgb_colour_string) {
+    var values = rgb_colour_string.match(/\d+/g)
+    for (let i = 0; i < values.length; i++) {
+        values[i] = Number(values[i]) * 0.80
+    }
+    return "rgb("+values[0]+", "+values[1]+", "+values[2]+")"
+}
+
 // Functions to highlight pattern when mouse hovers over them
 function hover_on_pattern() {
     parent_group = d3.select(this.parentNode)
+    parent_group.raise()
+
+    var color_string = parent_group.style("fill")
 
     parent_group
         .selectAll("circle")
             .transition()
             .duration(200)
             .attr("r", PATTERN_CIRCLE_RADIUS * 1.7)
+            .style("fill", darker_color(color_string))
 
     parent_group
         .selectAll("path")
             .transition()
             .duration(200)
             .attr("stroke-width", PATH_WIDTH * 2)
+            .style("stroke", darker_color(color_string))
 }
 
 function hover_off_pattern() {
@@ -369,10 +384,12 @@ function hover_off_pattern() {
             .transition()
             .duration(200)
             .attr("r", PATTERN_CIRCLE_RADIUS)
+            .style("fill", null)
 
     parent_group
         .selectAll("path")
             .transition()
             .duration(200)
             .attr("stroke-width", PATH_WIDTH)
+            .style("stroke", null)
 }

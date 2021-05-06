@@ -96,13 +96,23 @@ for (let i = 0; i < data.pattern_data.length; i++) {
     }
 }
 
-
+// Returns the number of distinctive note onsets in order
+// to determine a suitable width to the visualisation.
+// Reserving same amount of pixels for each distinctive note onset
+// is a good approximate of suitable width for the visualisation
+function distinctive_note_onsets(point_set) {
+    note_onsets = new Set()
+    point_set.forEach(point => {
+        note_onsets.add(point[0])
+    });
+    return note_onsets.size
+}
 
 //// Main visualisation
 // Set the constants, dimensions and margins of the graph
 const max_midi_pitch = 127
 var margin = {top: 10, right: 30, bottom: 50, left: 70},
-    width = data.point_set.length * 15
+    width = 15 * distinctive_note_onsets(data.point_set)
     height = 600 - margin.top - margin.bottom
 
 // Append the svg object to the page

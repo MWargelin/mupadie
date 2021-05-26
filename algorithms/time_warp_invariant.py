@@ -7,10 +7,10 @@ def compute(point_set, window=0):
 
 	Args:
 		window: The maximum number of notes there can be in between
-            consecutive notes in a pattern. If window is set to 0, window
-            is set to unrestricted mode, where there can be arbitrarily many
-            notes between consecutive notes. Notes played at the same time
-            are considered as "one note" by the window parameter.
+			consecutive notes in a pattern. If window is set to 0, window
+			is set to unrestricted mode, where there can be arbitrarily many
+			notes between consecutive notes. Notes played at the same time
+			are considered as "one note" by the window parameter.
 
 	Returns:
 		Patterns discovered from the given point set using a time-warp
@@ -31,7 +31,7 @@ def compute(point_set, window=0):
 
 	# Find patterns
 	for group in note_pairs.values():
-		patterns.append(_process_group(group, _window))
+		patterns.extend(_process_group(group, _window))
 
 	# Map notes in patterns back to the original notes
 	for instances in patterns:
@@ -101,17 +101,16 @@ def _note_pair_groups(point_set):
 
 
 def _process_group(group, window):
-	"""Find the longest pattern from given group.
+	"""Find the patterns from given group.
 
 	Args:
-		group: Group of note pairs to find the longest pattern from.
+		group: Group of note pairs to find the patterns from.
 		window: the number of notes there can be in between
-            consecutive notes of a pattern. Notes played at the
-            same time are counted as "one note".
+			consecutive notes of a pattern. Notes played at the
+			same time are counted as "one note".
 
 	Returns:
-		The longest pattern in the group as a list of two
-		items (first and second instance of the pattern)
+		The patterns in the group as a list.
 	"""
 	group.sort(key=lambda pair: (pair[0][0], pair[1][0]))
 
@@ -132,12 +131,29 @@ def _process_group(group, window):
 				lis[i] = lis[j] + 1
 				index[i] = j
 
-	pos = lis.index(max(lis))
+	patterns = []
+	for i in range(0, len(index)):
+		patterns.append(_pattern_from_position(i, index, group))
 
+	return patterns
+
+
+def _pattern_from_position(position, index_list, group):
+	"""Parses patterns from index list produced by longest increasing
+	subsequence algorithm.
+
+	Args:
+		position: Index position where to start parsing a pattern.
+		index_list: List containing the index positions of patterns.
+		group: Group of note pairs, that comprise the patterns.
+
+	Returns:
+		Pattern according to given position on the index list.
+	"""
 	seq = []
-	while (pos != None):
-		seq.append(group[pos])
-		pos = index[pos]
+	while (position != None):
+		seq.append(group[position])
+		position = index_list[position]
 	seq.reverse()
 
 	instance1 = [pair[0] for pair in seq]

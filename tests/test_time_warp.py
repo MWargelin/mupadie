@@ -37,7 +37,7 @@ def test_process_group():
 	pattern2 = [(1,2), (4,3), (5,3)]
 
 	result = time_warp_invariant._process_group(group, window=999)
-	assert result == [pattern1, pattern2]
+	assert [pattern1, pattern2] in result
 
 
 def test_process_group_with_window():
@@ -53,7 +53,7 @@ def test_process_group_with_window():
 	pattern2 = [(4,3), (5,3)]
 
 	result = time_warp_invariant._process_group(group, window=1)
-	assert result == [pattern1, pattern2]
+	assert [pattern1, pattern2] in result
 
 
 def test_format_for_visualisation_meta_text():

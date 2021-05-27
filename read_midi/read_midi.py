@@ -30,7 +30,7 @@ def to_point_set(path, chosen_tracks):
 			point_set.add((note_onset, msg.note))
 
 	point_set = sorted(point_set)
-	point_set = _limit_point_set_length(point_set, 1000)
+	point_set = _limit_point_set_length(point_set, 150)
 
 	return point_set
 

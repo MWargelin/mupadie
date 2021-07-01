@@ -27,7 +27,7 @@ var siatec_div = '\
     <input type="hidden" name="algorithm_name" value="SIATEC">\
     <div class="mb-2">\
         <input type=number class="form-control" name="siatec-min-pattern-length" value=2 min=1>\
-        <label for="siatec-min-pattern-length" class="form-label">Minimum pattern length \
+        <label for="siatec-min-pattern-length" class="form-label">minimum pattern length \
         <i class="bi bi-info-circle text-secondary" data-bs-toggle="tooltip" data-bs-placement="right" title="Patterns with less notes than this number are discarded. Raising this number can lead to shorter computation times."></i>\
         </label>\
     </div>\
@@ -40,6 +40,12 @@ var timewarp_div = '\
     <i class="bi bi-info-circle text-secondary" data-bs-toggle="tooltip" data-bs-placement="right" title="An algorithm that tolerates distortion in the note onsets, meaning that different instances of a pattern can have differing rhythms."></i>\
     </h4>\
     <input type="hidden" name="algorithm_name" value="time-warp-invariant">\
+    <div class="mb-2">\
+        <input type=number class="form-control" name="timewarp-min-pattern-length" value=2 min=1>\
+        <label for="timewarp-min-pattern-length" class="form-label">minimum pattern length \
+        <i class="bi bi-info-circle text-secondary" data-bs-toggle="tooltip" data-bs-placement="right" title="Patterns with less notes than this number are discarded."></i>\
+        </label>\
+    </div>\
     <div class="mb-2">\
         <input type=number class="form-control" name="timewarp-window" value=0 min=0>\
         <label for="timewarp-window" class="form-label">window \

@@ -128,11 +128,14 @@ def _pattern_data_from_form(form, point_set):
 	# timewarp-invariant algorithm
 	window = form.getlist('timewarp-window')
 	window = [int(x) for x in window]
+	min_pattern_length = form.getlist('timewarp-min-pattern-length')
+	min_pattern_length = [int(x) for x in min_pattern_length]
 	for i in range(len(window)):
 		pattern_data.append(
 			time_warp_invariant.compute(
 				point_set=point_set,
-				window=window[i]
+				window=window[i],
+				min_pattern_length=min_pattern_length[i]
 			)
 		)
 

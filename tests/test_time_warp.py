@@ -58,16 +58,23 @@ def test_process_group_with_window():
 
 def test_format_for_visualisation_meta_text():
 	window = 0
-	result = time_warp_invariant._format_for_visualisation([], window)
-	assert result['meta'] == 'Transposition and time-warp invariant algorithm. Window: unrestricted'
+	min_pattern_length = 1
+	result = time_warp_invariant._format_for_visualisation([], window, min_pattern_length)
+	assert result['meta'] == 'Transposition and time-warp invariant algorithm. Minimum pattern length: 1. Window: unrestricted'
 
 	window = 1
-	result = time_warp_invariant._format_for_visualisation([], window)
-	assert result['meta'] == 'Transposition and time-warp invariant algorithm. Window: 1'
+	min_pattern_length = 1
+	result = time_warp_invariant._format_for_visualisation([], window, min_pattern_length)
+	assert result['meta'] == 'Transposition and time-warp invariant algorithm. Minimum pattern length: 1. Window: 1'
+
+	window = 1
+	min_pattern_length = 2
+	result = time_warp_invariant._format_for_visualisation([], window, min_pattern_length)
+	assert result['meta'] == 'Transposition and time-warp invariant algorithm. Minimum pattern length: 2. Window: 1'
 
 
 def test_compute():
 	point_set = [(0,0), (4,1), (2,1), (8,3), (2,2), (10,3)]
-	results = time_warp_invariant.compute(point_set, window=0)
+	results = time_warp_invariant.compute(point_set, window=0, min_pattern_length=1)
 	pattern = [[(0,0), (2,1), (4,1)], [(2,2), (8,3), (10,3)]]
 	assert pattern in results['patterns']

@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 
-def compute(point_set, window=0):
+def compute(point_set, window=0, min_pattern_length=2):
 	"""Discover patterns from music using a transposition and time-warp
 	invariant algorithm.
 
@@ -11,6 +11,8 @@ def compute(point_set, window=0):
 			is set to unrestricted mode, where there can be arbitrarily many
 			notes between consecutive notes. Notes played at the same time
 			are considered as "one note" by the window parameter.
+		min_pattern_length: The minimum number of notes a pattern
+			must have.
 
 	Returns:
 		Patterns discovered from the given point set using a time-warp
@@ -33,13 +35,16 @@ def compute(point_set, window=0):
 	for group in note_pairs.values():
 		patterns.extend(_process_group(group, _window))
 
+	# Filter out too short patterns
+	patterns = [pattern for pattern in patterns if len(pattern[0]) >= min_pattern_length]
+
 	# Map notes in patterns back to the original notes
 	for instances in patterns:
 		for i in range(len(instances)):
 			mapped = [mapping[note] for note in instances[i]]
 			instances[i] = mapped
 
-	return _format_for_visualisation(patterns, window)
+	return _format_for_visualisation(patterns, window, min_pattern_length)
 
 
 def _relabel_x(point_set):
@@ -162,13 +167,15 @@ def _pattern_from_position(position, index_list, group):
 	return pattern
 
 
-def _format_for_visualisation(patterns, window):
+def _format_for_visualisation(patterns, window, min_pattern_length):
 	"""Transform the pattern discovery results into the specified data
 	structure used in the Mupadie visualisation.
 
 	Args:
 		patterns: The discovered patterns.
 		window: The window parameter as set by the user of the application.
+		min_pattern_length: The minimum pattern length parameter as set by
+			the user of the application.
 
 	Returns:
 		A dictionary documenting the pattern discovery results.
@@ -179,6 +186,6 @@ def _format_for_visualisation(patterns, window):
 		window_string = window
 
 	return {
-		'meta': f'Transposition and time-warp invariant algorithm. Window: {window_string}',
+		'meta': f'Transposition and time-warp invariant algorithm. Minimum pattern length: {min_pattern_length}. Window: {window_string}',
 		'patterns': patterns
 	}

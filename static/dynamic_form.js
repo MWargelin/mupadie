@@ -26,7 +26,7 @@ var siatec_div = '\
     </h4>\
     <input type="hidden" name="algorithm_name" value="SIATEC">\
     <div class="mb-2">\
-        <input type=number class="form-control" name="siatec-min-pattern-length" value=2 min=2>\
+        <input type=number class="form-control" name="siatec-min-pattern-length" value=2 min=1>\
         <label for="siatec-min-pattern-length" class="form-label">Minimum pattern length \
         <i class="bi bi-info-circle text-secondary" data-bs-toggle="tooltip" data-bs-placement="right" title="Patterns with less notes than this number are discarded. Raising this number can lead to shorter computation times."></i>\
         </label>\
